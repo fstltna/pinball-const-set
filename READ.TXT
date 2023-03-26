@@ -1,0 +1,72 @@
+I've managed to rip booting Pinball Construction Set from disk to a DOS EXE...
+(Pinball Construction Set is (c) Bill Budge/Electronic Arts 1982-85)
+
+I've created a full INT 13 handler that will handle all the program's calls
+to INT 13 (disk interrupt). I've managed to fix so you can have the files on
+your HD, and the program will load them from there. I used most of the MCS
+handler, so there wasn't as much involved here as in MCS, but it still took
+a number of hours to finish... (Don't run this from disk! It won't work! It
+has to run from HD to work properly!)
+
+The ripped version, and Pinball Construction Set itself has a few limitations.
+These are listed here below, and should not be confused as bugs...
+
+* The file PINBALL.PIC has to exist in the current directory for PCS to work
+  at all. Make sure this file is there...
+
+* PCS doesn't handle table files larger than 4000 bytes. This is fully
+  supported by my handler, so there's no problem there. I don't know what
+  happens if a file becomes larger...
+
+* PCS looks for 2 different kinds of files, first PINBALL.PIC, and later
+  *.PB. I've made the handler only look for these kinds of files. This is
+  since PCS only handles 63 files on the current disk. Remember, it's an
+  old program! If you have more than 63 PIC and PB files in the current
+  directory, you won't be able to load the files that are following the
+  first 63. You also won't be able to save any more tables if you already
+  have 63 of these files in the current directory.
+
+* This program HAS to be run from HD to work properly! It checks the drive
+  number when intercepting INT 13 calls, only letting through reads to drives
+  80h+ (80h is harddisk C:). Since I use INT 21 (DOS interrupt) to handle
+  files on HD, INT 21 will also call INT 13 to make its own reads and writes,
+  but the drive will be 80h+, since it IS run from HD. If you run this from
+  disk, the INT 21 reads and writes will also be intercepted since they're
+  not 80h+ (above 7fh). Haven't tried what happens, and I won't, but don't
+  blame me if you're stupid enough to try... And hopefully you're smart
+  enough to read the docs to a program before running it!
+
+* Every function in the disk menu works, except FORMAT. I've disabled this
+  on purpose, since there's no need to use PCS to format disks... The other
+  commands in the disk menu are:
+  LOAD - Loads a saved pinball table
+  SAVE - Saves the current table
+  QUIT - Quits back to the drawing board
+  MAKE GAME - Saves current table to a standalone DOS COM file. It even
+              creates an AUTOEXEC.BAT that would've started the table
+              automatically if it'd been saved to a bootdisk. Don't run this
+              from the root of your bootdrive, since it will overwrite your
+              real AUTOEXEC.BAT! If you want to create a game, you have to
+              have 2 spots open in your directory (max 61 .PIC and .PB files
+              in current directory)
+  PLAY GAME - Play/preview current table
+
+
+If you enter any parameter after PCS.EXE, it will disable the Quit feature
+(Ctrl-X). This is because some computers have had problems with this
+feature, so to work around that, I've added this parameter thing. To run the
+program with quit enabled, simply run PCS.EXE. To disable quit, in case it
+crashes your computer, or whatever, just run PCS.EXE with any parameter, like
+PCS.EXE 1 (or anything, really).
+
+The default extension for saved pinball tables is .PB. This can't be altered,
+so if you copy tables from anywhere else, make sure they have this extension!
+
+
+Hope you'll enjoy this old, but very cool program.
+
+I have tried this under several OS's (MSDOS 3.3, 5.0 and 6.2, PC-DOS 7,
+Windoze 98 & NT). It runs under all, but I can't get any sound under Windoze.
+A clean boot is probably preferred, but not at all required.
+
+Enjoy!
